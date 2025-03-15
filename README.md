@@ -1,6 +1,6 @@
 # Reddit Clone in Python
 
-A Reddit-like online forum built with Flask and SQLite, featuring societies (subreddits), posts, comments, and moderation tools. The original source project in PHP can be found [here](https://github.com/zethon/oeddit)
+A Reddit-like online forum built with Flask and SQLite, featuring societies (subreddits), posts, comments, and moderation tools. **Oeddit**, the original source project in PHP can be found [here](https://github.com/zethon/oeddit)
 
 ## Features
 - Societies (Subreddits)
