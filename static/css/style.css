@@ -1,0 +1,171 @@
+/* General Styles */
+body {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+/* Card Styles */
+.card {
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid rgba(0,0,0,0.125);
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.invalid-feedback {
+    display: block;
+    color: #dc3545;
+}
+
+/* Post Styles */
+.post-card {
+    transition: transform 0.2s;
+}
+
+.post-card:hover {
+    transform: translateY(-2px);
+}
+
+.post-meta {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.post-content {
+    white-space: pre-line;
+}
+
+/* Comment Styles */
+.comment {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background-color: #fff;
+    border-radius: 4px;
+    border: 1px solid rgba(0,0,0,0.125);
+}
+
+.comment-meta {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.comment-replies {
+    margin-left: 2rem;
+    border-left: 2px solid #dee2e6;
+    padding-left: 1rem;
+}
+
+/* Vote Buttons */
+.vote-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: #6c757d;
+}
+
+.vote-button:hover {
+    color: #007bff;
+}
+
+.vote-button.upvoted {
+    color: #28a745;
+}
+
+.vote-button.downvoted {
+    color: #dc3545;
+}
+
+/* Society Styles */
+.society-card {
+    margin-bottom: 1rem;
+}
+
+.society-meta {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+/* Message Styles */
+.message {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: #fff;
+    border-radius: 4px;
+    border: 1px solid rgba(0,0,0,0.125);
+}
+
+.message.unread {
+    background-color: #f8f9fa;
+}
+
+.message-meta {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+/* Report Styles */
+.report {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: #fff;
+    border-radius: 4px;
+    border: 1px solid rgba(0,0,0,0.125);
+}
+
+.report.unresolved {
+    border-left: 4px solid #dc3545;
+}
+
+.report-meta {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+/* Utility Classes */
+.text-small {
+    font-size: 0.8rem;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .comment-replies {
+        margin-left: 1rem;
+    }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}

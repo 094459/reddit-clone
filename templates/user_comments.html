@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>{{ user.username }}'s Comments</h4>
+                </div>
+                <div class="card-body">
+                    {% if comments %}
+                    <div class="list-group">
+                        {% for comment in comments %}
+                        <a href="{{ url_for('posts.view_post', post_id=comment.post_id) }}" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">Re: {{ comment.post.title }}</h6>
+                                <small>{{ comment.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                            </div>
+                            <p class="mb-1">{{ comment.content }}</p>
+                            <small>{{ comment.score }} points</small>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">
+                        No comments found.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <a href="{{ url_for('users.view_user', user_id=user.id) }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Profile
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

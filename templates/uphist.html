@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Posts by {{ user.username }}</h1>
+    
+    <div class="card mt-4">
+        <div class="card-body">
+            {% if posts %}
+            <div class="list-group">
+                {% for post in posts %}
+                <div class="list-group-item">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">
+                            <a href="{{ url_for('posts.view_post', post_id=post.id) }}">{{ post.title }}</a>
+                        </h5>
+                        <small>{{ post.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                    </div>
+                    <p class="mb-1">{{ post.content|truncate(200) }}</p>
+                    <small>
+                        Posted in <a href="{{ url_for('societies.view_society', society_id=post.society_id) }}">{{ post.society.name }}</a>
+                        | {{ post.comments.count() }} comments | {{ post.score }} points
+                    </small>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                This user hasn't made any posts yet.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="mt-3">
+        <a href="{{ url_for('users.user_profile', username=user.username) }}" class="btn btn-secondary">Back to Profile</a>
+    </div>
+</div>
+{% endblock %}

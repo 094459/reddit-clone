@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2>Moderator Panel</h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('main.home') }}">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Moderator Panel</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    
+    <div class="row">
+        {% if societies %}
+            {% for society in societies %}
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>{{ society.name }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>{{ society.description|truncate(200) }}</p>
+                        <div class="btn-group">
+                            <a href="{{ url_for('mod.mod_dashboard', society_id=society.id) }}" class="btn btn-primary">
+                                <i class="fas fa-chart-line"></i> Dashboard
+                            </a>
+                            <a href="{{ url_for('mod.mod_reports', society_id=society.id) }}" class="btn btn-warning">
+                                <i class="fas fa-flag"></i> Reports
+                            </a>
+                            <a href="{{ url_for('mod.mod_society', society_id=society.id) }}" class="btn btn-info">
+                                <i class="fas fa-cog"></i> Settings
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-md-12">
+                <div class="alert alert-info">
+                    You are not a moderator of any societies.
+                    {% if not current_user.is_admin %}
+                    <a href="{{ url_for('societies.new_society') }}" class="alert-link">Create a society</a> to become a moderator.
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

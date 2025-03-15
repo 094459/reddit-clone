@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>{{ user.username }}</h4>
+                    {% if user.is_admin %}
+                    <span class="badge badge-primary">Admin</span>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <p><strong>Joined:</strong> {{ user.created_at.strftime('%Y-%m-%d') }}</p>
+                    <p><strong>Karma:</strong> {{ user.karma }}</p>
+                    <p><strong>Posts:</strong> {{ post_count }}</p>
+                    <p><strong>Comments:</strong> {{ comment_count }}</p>
+                    <p><strong>Moderated Societies:</strong> {{ user.moderated_societies|length }}</p>
+                    <p><strong>Subscribed Societies:</strong> {{ subscribed_count }}</p>
+                    
+                    <div class="mt-3">
+                        <a href="{{ url_for('users.edit_profile') }}" class="btn btn-primary">
+                            <i class="fas fa-edit"></i> Edit Profile
+                        </a>
+                        <a href="{{ url_for('auth.change_password') }}" class="btn btn-secondary">
+                            <i class="fas fa-key"></i> Change Password
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Moderated Societies</h5>
+                </div>
+                <div class="card-body">
+                    {% if user.moderated_societies %}
+                    <ul class="list-group">
+                        {% for society in user.moderated_societies %}
+                        <li class="list-group-item">
+                            <a href="{{ url_for('societies.view_society', society_id=society.id) }}">{{ society.name }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="text-muted">Not moderating any societies.</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Subscribed Societies</h5>
+                </div>
+                <div class="card-body">
+                    {% if user.subscribed_societies %}
+                    <ul class="list-group">
+                        {% for society in user.subscribed_societies %}
+                        <li class="list-group-item">
+                            <a href="{{ url_for('societies.view_society', society_id=society.id) }}">{{ society.name }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="text-muted">Not subscribed to any societies.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5>Recent Posts</h5>
+                    <a href="{{ url_for('users.user_posts', user_id=user.id) }}" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="card-body">
+                    {% if posts %}
+                    <div class="list-group">
+                        {% for post in posts %}
+                        <a href="{{ url_for('posts.view_post', post_id=post.id) }}" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">{{ post.title }}</h5>
+                                <small>{{ post.created_at.strftime('%Y-%m-%d') }}</small>
+                            </div>
+                            <p class="mb-1">{{ post.content|truncate(100) }}</p>
+                            <small>in {{ post.society.name }} • {{ post.score }} points • {{ post.comments.count() }} comments</small>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No posts yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5>Recent Comments</h5>
+                    <a href="{{ url_for('users.user_comments', user_id=user.id) }}" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="card-body">
+                    {% if comments %}
+                    <div class="list-group">
+                        {% for comment in comments %}
+                        <a href="{{ url_for('posts.view_post', post_id=comment.post_id) }}" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">Re: {{ comment.post.title }}</h6>
+                                <small>{{ comment.created_at.strftime('%Y-%m-%d') }}</small>
+                            </div>
+                            <p class="mb-1">{{ comment.content|truncate(100) }}</p>
+                            <small>{{ comment.score }} points</small>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No comments yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

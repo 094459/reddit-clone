@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Reports for {{ society.name }}</h1>
+    
+    <div class="card mt-4">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#all-reports" data-toggle="tab">All Reports</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#post-reports" data-toggle="tab">Post Reports</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#comment-reports" data-toggle="tab">Comment Reports</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#user-reports" data-toggle="tab">User Reports</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="all-reports">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Reported By</th>
+                                    <th>Reason</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for report in reports %}
+                                <tr>
+                                    <td>
+                                        {% if report.report_type == 'post' %}
+                                        <span class="badge badge-primary">Post</span>
+                                        {% elif report.report_type == 'comment' %}
+                                        <span class="badge badge-info">Comment</span>
+                                        {% elif report.report_type == 'user' %}
+                                        <span class="badge badge-warning">User</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('users.user_profile', username=report.reporter.username) }}">
+                                            {{ report.reporter.username }}
+                                        </a>
+                                    </td>
+                                    <td>{{ report.reason }}</td>
+                                    <td>{{ report.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">
+                                                Actions
+                                            </button>
+                                            <div class="dropdown-menu">
+                                                {% if report.report_type == 'post' and report.reported_post %}
+                                                <a class="dropdown-item" href="{{ url_for('posts.view_post', post_id=report.reported_post.id) }}">View Post</a>
+                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#deletePostModal{{ report.id }}">Delete Post</a>
+                                                {% elif report.report_type == 'comment' and report.reported_comment %}
+                                                <a class="dropdown-item" href="{{ url_for('posts.view_post', post_id=report.reported_comment.post_id) }}">View Comment</a>
+                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#deleteCommentModal{{ report.id }}">Delete Comment</a>
+                                                {% elif report.report_type == 'user' and report.reported_user %}
+                                                <a class="dropdown-item" href="{{ url_for('users.user_profile', username=report.reported_user.username) }}">View User</a>
+                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#banUserModal{{ report.id }}">Ban User</a>
+                                                {% endif %}
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item text-danger" href="#" data-toggle="modal" data-target="#dismissReportModal{{ report.id }}">Dismiss Report</a>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Dismiss Report Modal -->
+                                        <div class="modal fade" id="dismissReportModal{{ report.id }}" tabindex="-1" role="dialog" aria-labelledby="dismissReportModalLabel{{ report.id }}" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="dismissReportModalLabel{{ report.id }}">Dismiss Report</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>Are you sure you want to dismiss this report?</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                        <form action="#" method="post">
+                                                            <button type="submit" class="btn btn-danger">Dismiss</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="5" class="text-center">No reports found.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Other tab panes would follow a similar structure -->
+                <div class="tab-pane fade" id="post-reports">
+                    <!-- Post reports table -->
+                </div>
+                
+                <div class="tab-pane fade" id="comment-reports">
+                    <!-- Comment reports table -->
+                </div>
+                
+                <div class="tab-pane fade" id="user-reports">
+                    <!-- User reports table -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

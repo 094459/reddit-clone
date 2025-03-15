@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Admin Panel</h1>
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">User Management</h5>
+                    <p class="card-text">Manage users, bans, and permissions</p>
+                    <a href="{{ url_for('admin.admin_users') }}" class="btn btn-primary">View Users</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Reports</h5>
+                    <p class="card-text">View and handle reported content</p>
+                    <a href="{{ url_for('admin.admin_reports') }}" class="btn btn-primary">View Reports</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Dashboard</h5>
+                    <p class="card-text">View site statistics and trends</p>
+                    <a href="{{ url_for('admin.admin_dashboard') }}" class="btn btn-primary">View Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Admin Log</h5>
+                    <p class="card-text">View admin actions history</p>
+                    <a href="{{ url_for('admin.admin_log') }}" class="btn btn-primary">View Log</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Site Trends</h5>
+                    <p class="card-text">View detailed site analytics</p>
+                    <a href="{{ url_for('admin.admin_trends') }}" class="btn btn-primary">View Trends</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

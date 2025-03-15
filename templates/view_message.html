@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Message</h1>
+    
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="list-group">
+                <a href="{{ url_for('messages.inbox') }}" class="list-group-item list-group-item-action">
+                    Inbox
+                </a>
+                <a href="{{ url_for('messages.outbox') }}" class="list-group-item list-group-item-action">
+                    Sent Messages
+                </a>
+                <a href="{{ url_for('messages.new_message') }}" class="list-group-item list-group-item-action">
+                    New Message
+                </a>
+            </div>
+        </div>
+        
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header">
+                    <h5>{{ message.subject }}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="message-info mb-3">
+                        <p><strong>From:</strong> {{ message.sender.username }}</p>
+                        <p><strong>To:</strong> {{ message.recipient.username }}</p>
+                        <p><strong>Date:</strong> {{ message.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+                    </div>
+                    
+                    <div class="message-content mb-4">
+                        <p>{{ message.body|nl2br }}</p>
+                    </div>
+                    
+                    <div class="message-actions">
+                        {% if message.recipient_id == current_user.id %}
+                        <a href="{{ url_for('messages.reply_message', message_id=message.id) }}" class="btn btn-primary">Reply</a>
+                        {% endif %}
+                        
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteMessageModal">
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Message Modal -->
+<div class="modal fade" id="deleteMessageModal" tabindex="-1" role="dialog" aria-labelledby="deleteMessageModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteMessageModalLabel">Delete Message</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this message?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <form action="{{ url_for('messages.delete_message', message_id=message.id) }}" method="post">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

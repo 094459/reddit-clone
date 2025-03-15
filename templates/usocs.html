@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Societies Moderated by {{ user.username }}</h1>
+    
+    <div class="card mt-4">
+        <div class="card-body">
+            {% if societies %}
+            <div class="list-group">
+                {% for society in societies %}
+                <div class="list-group-item">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">
+                            <a href="{{ url_for('societies.view_society', society_id=society.id) }}">{{ society.name }}</a>
+                        </h5>
+                        <small>Created: {{ society.created_at.strftime('%Y-%m-%d') }}</small>
+                    </div>
+                    <p class="mb-1">{{ society.description|truncate(200) }}</p>
+                    <small>
+                        {{ society.members.count() }} members | {{ society.posts.count() }} posts
+                    </small>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                This user doesn't moderate any societies.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="mt-3">
+        <a href="{{ url_for('users.user_profile', username=user.username) }}" class="btn btn-secondary">Back to Profile</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Your Messages</h1>
+    
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="list-group">
+                <a href="{{ url_for('messages.inbox') }}" class="list-group-item list-group-item-action">
+                    Inbox
+                </a>
+                <a href="{{ url_for('messages.outbox') }}" class="list-group-item list-group-item-action active">
+                    Sent Messages
+                </a>
+                <a href="{{ url_for('messages.new_message') }}" class="list-group-item list-group-item-action">
+                    New Message
+                </a>
+            </div>
+        </div>
+        
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Sent Messages</h5>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                    <div class="list-group">
+                        {% for message in messages %}
+                        <a href="{{ url_for('messages.view_message', message_id=message.id) }}" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">{{ message.subject }}</h5>
+                                <small>{{ message.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                            </div>
+                            <p class="mb-1">{{ message.body|truncate(100) }}</p>
+                            <small>To: {{ message.recipient.username }}</small>
+                            {% if message.is_read %}
+                            <span class="badge badge-success float-right">Read</span>
+                            {% else %}
+                            <span class="badge badge-secondary float-right">Unread</span>
+                            {% endif %}
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">
+                        You haven't sent any messages.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

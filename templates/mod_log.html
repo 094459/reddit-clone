@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Moderator Log: {{ society.name }}</h1>
+    
+    <div class="card mt-4">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#all-actions" data-toggle="tab">All Actions</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#user-actions" data-toggle="tab">User Actions</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#post-actions" data-toggle="tab">Post Actions</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#comment-actions" data-toggle="tab">Comment Actions</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="all-actions">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Moderator</th>
+                                    <th>Action</th>
+                                    <th>Target</th>
+                                    <th>Details</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if mod_actions %}
+                                {% for action in mod_actions %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('users.user_profile', username=action.moderator.username) }}">
+                                            {{ action.moderator.username }}
+                                        </a>
+                                    </td>
+                                    <td>{{ action.action_type }}</td>
+                                    <td>{{ action.target }}</td>
+                                    <td>{{ action.details }}</td>
+                                    <td>{{ action.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                </tr>
+                                {% endfor %}
+                                {% else %}
+                                <tr>
+                                    <td colspan="5" class="text-center">No moderator actions logged.</td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Other tab panes would follow a similar structure -->
+                <div class="tab-pane fade" id="user-actions">
+                    <!-- User actions table -->
+                </div>
+                
+                <div class="tab-pane fade" id="post-actions">
+                    <!-- Post actions table -->
+                </div>
+                
+                <div class="tab-pane fade" id="comment-actions">
+                    <!-- Comment actions table -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

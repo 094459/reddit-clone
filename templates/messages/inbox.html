@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2>Messages</h2>
+            <a href="{{ url_for('messages.new_message') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> New Message
+            </a>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="nav nav-tabs" id="messagesTabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="inbox-tab" data-toggle="tab" href="#inbox" role="tab" aria-controls="inbox" aria-selected="true">
+                        Inbox 
+                        {% set unread = received_messages|selectattr('is_read', 'equalto', false)|list|length %}
+                        {% if unread > 0 %}
+                        <span class="badge badge-primary">{{ unread }}</span>
+                        {% endif %}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="sent-tab" data-toggle="tab" href="#sent" role="tab" aria-controls="sent" aria-selected="false">Sent</a>
+                </li>
+            </ul>
+            
+            <div class="tab-content" id="messagesTabsContent">
+                <div class="tab-pane fade show active" id="inbox" role="tabpanel" aria-labelledby="inbox-tab">
+                    <div class="card">
+                        <div class="card-body">
+                            {% if received_messages %}
+                            <div class="list-group">
+                                {% for message in received_messages %}
+                                <a href="{{ url_for('messages.view_message', message_id=message.id) }}" class="list-group-item list-group-item-action {% if not message.is_read %}font-weight-bold{% endif %}">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">{{ message.subject }}</h5>
+                                        <small>{{ message.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                                    </div>
+                                    <p class="mb-1">From: {{ message.sender.username }}</p>
+                                    <small>{{ message.body|truncate(100) }}</small>
+                                </a>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <p class="text-muted">No messages in your inbox.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-pane fade" id="sent" role="tabpanel" aria-labelledby="sent-tab">
+                    <div class="card">
+                        <div class="card-body">
+                            {% if sent_messages %}
+                            <div class="list-group">
+                                {% for message in sent_messages %}
+                                <a href="{{ url_for('messages.view_message', message_id=message.id) }}" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">{{ message.subject }}</h5>
+                                        <small>{{ message.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                                    </div>
+                                    <p class="mb-1">To: {{ message.recipient.username }}</p>
+                                    <small>{{ message.body|truncate(100) }}</small>
+                                    {% if message.is_read %}
+                                    <span class="badge badge-success">Read {{ message.read_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                                    {% else %}
+                                    <span class="badge badge-secondary">Unread</span>
+                                    {% endif %}
+                                </a>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <p class="text-muted">No sent messages.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

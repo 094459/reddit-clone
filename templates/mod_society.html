@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2>Manage Society: {{ society.name }}</h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('main.home') }}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('mod.mod_panel') }}">Moderator Panel</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ society.name }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-3">
+            <div class="list-group mb-4">
+                <a href="{{ url_for('mod.mod_dashboard', society_id=society.id) }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-chart-line"></i> Dashboard
+                </a>
+                <a href="{{ url_for('mod.mod_reports', society_id=society.id) }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-flag"></i> Reports
+                </a>
+                <a href="{{ url_for('mod.mod_society', society_id=society.id) }}" class="list-group-item list-group-item-action active">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+                <a href="{{ url_for('mod.mod_log', society_id=society.id) }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-history"></i> Mod Log
+                </a>
+                <a href="{{ url_for('mod.mod_trends', society_id=society.id) }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-chart-bar"></i> Trends
+                </a>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Society Info</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Created:</strong> {{ society.created_at.strftime('%Y-%m-%d') }}</p>
+                    <p><strong>Posts:</strong> {{ society.posts.count() }}</p>
+                    <p><strong>Subscribers:</strong> {{ society.subscribers.count() }}</p>
+                    <p><strong>Status:</strong> 
+                        {% if society.is_locked %}
+                        <span class="badge badge-danger">Locked</span>
+                        {% else %}
+                        <span class="badge badge-success">Active</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-9">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Society Settings</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="description">Description:</label>
+                        <textarea class="form-control" id="description" rows="3" readonly>{{ society.description }}</textarea>
+                    </div>
+                    <a href="{{ url_for('societies.edit_society', society_id=society.id) }}" class="btn btn-primary">
+                        <i class="fas fa-edit"></i> Edit Description
+                    </a>
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Moderators</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Joined</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for mod in society.moderators %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('users.view_user', user_id=mod.id) }}">{{ mod.username }}</a>
+                                        {% if mod.is_admin %}
+                                        <span class="badge badge-primary">Admin</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ mod.created_at.strftime('%Y-%m-%d') }}</td>
+                                    <td>
+                                        {% if mod.id != current_user.id %}
+                                        <a href="{{ url_for('mod.remove_moderator', society_id=society.id, user_id=mod.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to remove this moderator?')">
+                                            <i class="fas fa-user-minus"></i> Remove
+                                        </a>
+                                        {% else %}
+                                        <span class="text-muted">You</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h6>Add Moderator</h6>
+                    <form action="{{ url_for('mod.add_moderator', society_id=society.id) }}" method="POST" class="form-inline">
+                        <div class="form-group mr-2">
+                            <input type="text" class="form-control" name="username" placeholder="Username" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-user-plus"></i> Add
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Banned Users</h5>
+                </div>
+                <div class="card-body">
+                    {% if society.banned_users.count() > 0 %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in society.banned_users %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('users.view_user', user_id=user.id) }}">{{ user.username }}</a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('mod.unban_from_society', society_id=society.id, user_id=user.id) }}" class="btn btn-sm btn-success">
+                                            <i class="fas fa-user-check"></i> Unban
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No banned users.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
