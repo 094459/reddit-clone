@@ -2,6 +2,8 @@
 
 A Reddit-like online forum built with Flask and SQLite, featuring societies (subreddits), posts, comments, and moderation tools. **Oeddit**, the original source project in PHP can be found [here](https://github.com/zethon/oeddit)
 
+You can read how this repo came to be by checking out this blog post, [From PHP to Python with the help of Amazon Q Developer](https://community.aws/content/2uMzlDBb6QvKe0pjBU1bbNt3V61/from-php-to-python-porting-a-reddit-clone-with-the-help-of-amazon-q-developer?trk=fd6bb27a-13b0-4286-8269-c7b1cfaa29f0&sc_channel=el)
+
 ## Features
 - Societies (Subreddits)
 - Posts and Comments
